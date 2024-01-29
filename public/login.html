@@ -1,0 +1,127 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
+<title>HeroMC Thingy! - Login</title>
+<p id="status">Login</p>
+<div class="controls">
+  <textarea placeholder="Username" id="user"></textarea>
+  <textarea placeholder="Password" id="pss"></textarea>
+  <button id="generate" onclick="generate()">Login</button>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+function createCookie(name, value) {
+   document.cookie = name + "=" + value + "; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/";
+}
+
+function readCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+  }
+
+async function generate() {
+  const stt = document.getElementById("status")
+  stt.innerHTML = "Loggin in..."
+
+  const usrTB = document.getElementById("user")
+  const usrN = usrTB.value
+
+  const PasswordTB = document.getElementById("pss")
+  const pass = PasswordTB.value;
+
+  const postData = {
+    "username": usrN,
+    "password": pass
+  }
+
+  const resp = await axios.post("https://trash.cyclic.cloud/auth/login/v1", postData)
+  const statut = resp.data.result
+  if (statut == "SUCCESS") {
+    stt.innerHTML = `Redirecting...`
+    createCookie("usr", usrN)
+    createCookie("ps", pass)
+    window.location.href = "/"
+  } else {
+    alert(`Error! Error code : ${statut}`)
+  }
+}
+document.getElementById("user").addEventListener("keydown", function(e) {
+            if (e.key === "Enter") {
+                e.preventDefault();
+            }
+        });
+
+        document.getElementById("pss").addEventListener("keydown", function(e) {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                generate()
+            }
+        });
+</script>
+
+<style>
+button#generate {
+  text-align: center;
+  background-color: #161616;
+  color: #f8ebe8;
+  font-size: 1.2em;
+  border: none;
+  padding: 0.7em 1.2em;
+  border-radius: 0.3em;
+  font-family: 'Quicksand', sans-serif;
+}
+button#generate:hover {
+  cursor: pointer;
+  background-color: #2b2b2b;
+}
+body {
+  background-color: #080302;
+}
+p#status {
+  color: #f8ebe8;
+  font-family: 'Quicksand', sans-serif;
+}
+textarea {
+  text-align: left;
+  background-color: #161616;
+  color: #f8ebe8;
+  font-size: 1.16em;
+  border: none;
+  border-radius: 0.3em;
+  font-family: 'Quicksand', sans-serif;
+  padding: 0em 0.3em;
+  resize: none;
+}
+textarea#pss {
+  text-align: left;
+  background-color: #161616;
+  color: transparent;text-shadow: 0 0 8px rgba(0,0,0,0.5);
+  font-size: 1.16em;
+  border: none;
+  border-radius: 0.3em;
+  font-family: 'Quicksand', sans-serif;
+  padding: 0em 0.3em;
+  resize: none;
+}
+.container {
+  display: flex;
+}
+.iframe-container {
+  display: flex;
+}
+iframe#discordEmbed {
+  margin-left: 10;
+  margin-right: 10;
+}
+p#gioithieu {
+  font-family: 'Quicksand', sans-serif;
+  color: #ffffff;
+  clear: both;
+}
+</style>
